@@ -1,0 +1,43 @@
+{
+    "category": "Source",
+    "provider": "Buildkite",
+    "version": "1",
+    "settings": {
+        "entityUrlTemplate": "https://buildkite.com/{Config:Organization-Slug}/{Config:Project-Slug}/builds?branch={Config:Branch}",
+        "executionUrlTemplate": "https://buildkite.com/{Config:Organization-Slug}/{Config:Project-Slug}/builds/{ExternalExecutionId}"
+    },
+    "configurationProperties": [
+        {
+            "name": "API-Access-Token",
+            "required": true,
+            "key": false,
+            "secret": true
+        },
+        {
+            "name": "Organization-Slug",
+            "required": true,
+            "key": false,
+            "secret": false
+        },
+        {
+            "name": "Project-Slug",
+            "required": true,
+            "key": false,
+            "secret": false
+        },
+        {
+            "name": "Branch",
+            "required": true,
+            "key": false,
+            "secret": false
+        }
+    ],
+    "inputArtifactDetails": {
+        "minimumCount": 1,
+        "maximumCount": 1
+    },
+    "outputArtifactDetails": {
+        "minimumCount": 0,
+        "maximumCount": 0
+    }
+}
