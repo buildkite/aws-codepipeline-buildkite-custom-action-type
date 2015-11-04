@@ -45,7 +45,7 @@ Configure it with your Buildkite details:
 
 <img src="http://i.imgur.com/hfiyBEa.png" width="542">
 
-### 2. Start a Buildkite agent with the customized checkout hook
+### 4. Start a Buildkite agent with the customized checkout hook
 
 ```bash
 buildkite-agent start --token xxx \
@@ -53,14 +53,14 @@ buildkite-agent start --token xxx \
                       --meta-data codepipeline=true
 ```
 
-### 3. Run the CodePipeline job poller
+### 5. Run the CodePipeline job poller
 
 ```
 $ ./poll.sh "category=Test,owner=Custom,version=1,provider=Buildkite"
 Polling for CodePipeline job for action-type-id 'category=Test,owner=Custom,version=1,provider=Buildkite'
 ```
 
-### 5. Create a release
+### 6. Create a release
 
 Create a new release on CodePipeline, either with the "Release change" button or via the cli like so:
 
