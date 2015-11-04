@@ -1,6 +1,9 @@
 # Using AWS CodePipeline with Buildkite
 
-All you need to trigger Buildkite builds from [AWS CodePipeline](https://aws.amazon.com/codepipeline/) tasks: a set of [custom-action-type JSON files](custom-action-types) you upload via the AWS CLI, and a [custom checkout agent hook](agent-hooks/checkout) that uses the CodePipeline S3 artifact instead of git.
+[AWS CodePipeline](https://aws.amazon.com/codepipeline/) integration for Buildkite that allows you to trigger Buildkite builds from within your CodePipeline pipelines. It consists of:
+
+* A set of [custom-action-type JSON files](custom-action-types) for you to upload via the AWS CLI, enabling you to add and configure Buildkite tasks.
+* A [custom checkout agent hook](agent-hooks/checkout) to override the default agent code checkout behavior to have it download code directly from the CodePipeline S3 artifact.
 
 <img src="http://i.imgur.com/sgel4lR.png" width="242">
 
