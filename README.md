@@ -17,7 +17,7 @@ Create a Buildkite custom action type using one of the example JSON definitions.
 * [`Test`](custom-action-types/test.json)
 * [`Deploy`](custom-action-types/deploy.json)
 
-For example, use the following command command to create a Buildkite `Test` and Buildkite `Deploy` action type:
+For example, use the following command command to create a Buildkite `Test` action type:
 
 ```bash
 aws codepipeline create-custom-action-type --cli-input-json file://custom-action-types/test.json
@@ -25,15 +25,21 @@ aws codepipeline create-custom-action-type --cli-input-json file://custom-action
 
 ### Edit your pipeline
 
-...
+Add a new pipeline action:
+
+![](http://i.imgur.com/2ItTqhq.png)
+
+Choose the type you created earlier:
+
+![](http://i.imgur.com/EJoLV8R.png)
+
+Configure it with a personal access token that has `read_builds` and `write_builds`, as well as the org slug, project slug and branch name:
+
+![](http://i.imgur.com/EJoLV8R.png)
 
 ### Create a release
 
-...
-
-### Run the job poller
-
-...
+Create a new release, and then run the job poller:
 
 ```bash
 $ ./poll.sh "category=Test,owner=Custom,version=1,provider=Buildkite"
