@@ -1,6 +1,11 @@
 # AWS CodePipeline Buildkite Custom Action Type
 
-An example custom action type for triggering Buildkite builds from within AWS CodePipeline.
+An example of a custom action type, and a customized Buildkite agent checkout hook, for running Buildkite builds from [AWS CodePipeline](https://aws.amazon.com/codepipeline/).
+
+Contains:
+
+* [agent-hooks](agent-hooks) - a checkout agent hook override that downloads the source code via the CodePipeline S3 artifact
+* [custom-action-types](custom-action-types) - sample custom action type JSON files that can be uploaded via the AWS CLI
 
 Requirements:
 
@@ -10,22 +15,25 @@ Requirements:
 
 ## Setup
 
-### 1. Add a new custom type to CodePipeline
+### 1. Start a Buildkite agent with the customized checkout hook
 
-Create a Buildkite custom action type using one of the example JSON definitions. There are separate JSON files for each of the types:
+```bash
+buildkite-agent start --token xxx \
+                      --hooks-path "$PWD/agent-hooks" \
+                      --meta-data queue=codepipeline
+```
 
-* [`Source`](custom-action-types/source.json)
-* [`Build`](custom-action-types/build.json)
-* [`Test`](custom-action-types/test.json)
-* [`Deploy`](custom-action-types/deploy.json)
+### 2. Add a new custom type to CodePipeline
 
-For example, use the following command command to create a Buildkite `Test` action type:
+The only way to create a custom CodePipeline action type is via the aws cli. There are separate JSON files for each of the types [`Source`](custom-action-types/source.json), [`Build`](custom-action-types/build.json), [`Test`](custom-action-types/test.json) and [`Deploy`](custom-action-types/deploy.json)
+
+The following command creates a custom action type for a Buildkite `Test` action:
 
 ```bash
 aws codepipeline create-custom-action-type --cli-input-json file://custom-action-types/test.json
 ```
 
-### 2. Edit your pipeline
+### 3. Edit your pipeline
 
 Add a new pipeline action:
 
@@ -39,7 +47,7 @@ Configure it with your Buildkite details:
 
 <img src="http://i.imgur.com/hfiyBEa.png" width="542">
 
-### 3. Create a release
+### 4. Create a release
 
 Create a new release, and then run the job poller:
 
@@ -52,11 +60,7 @@ Acknowleding CodePipeline job (id: e3d5097b-5933-438d-af73-56d9eb0d5a41 nonce: 3
 Build is running
 Build is running
 Build finished
-Updating CodePipeline job with 'failed' result
+Updating CodePipeline job with 'passed' result
 ```
 
-<img src="http://i.imgur.com/sFcKQys.png" width="236">
-
-## TODO
-
-* Revision/commit isn't passed correctly through to Buildkite
+<img src="http://i.imgur.com/sgel4lR.png" width="242">

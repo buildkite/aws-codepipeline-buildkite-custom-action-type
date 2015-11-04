@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# The following `checkout` Buildkite Agent hook overrides the default checkout
+# behavior to download the CodePipeline artifact using the CODEPIPELINE_JOB_JSON
+# which has been set up when the build was created from poll.sh
+
+# v4 S3 signatures must be enabled to download the artifact:
+# http://docs.aws.amazon.com/AmazonS3/latest/dev/UsingAWSSDK.html#specify-signature-version
+
+set -eu
+
+echo "~~~ Cleaning checkout dir"
+
+checkout_dir=$(pwd)
+rm -rf "$checkout_dir"
+mkdir "$checkout_dir"
+cd "$checkout_dir"
+
+echo "~~~ Downloading S3 artifact"
+
+if [[ -z "${CODEPIPELINE_JOB_JSON:-}" ]]; then
+  echo "^^^ +++"
+  echo "Missing environment variable CODEPIPELINE_JOB_JSON"
+  exit 1
+fi
+
+artifact_json=$(echo "$CODEPIPELINE_JOB_JSON" | jq '.data.inputArtifacts[0]')
+artifact_name=$(echo "$artifact_json" | jq -r '.name')
+artifact_type=$(echo "$artifact_json" | jq -r '.location.type')
+artifact_s3_object_key=$(echo "$artifact_json" | jq -r '.location.s3Location.objectKey')
+artifact_s3_bucket_name=$(echo "$artifact_json" | jq -r '.location.s3Location.bucketName')
+
+if [[ "$artifact_type" != "S3" ]]; then
+  echo "^^^ +++"
+  echo "Artifact '$artifact_name' type '$artifact_type' is not S3"
+  exit 1
+fi
+
+export AWS_ACCESS_KEY_ID=$(echo "$CODEPIPELINE_JOB_JSON" | jq -r '.data.artifactCredentials.accessKeyId')
+export AWS_SECRET_ACCESS_KEY=$(echo "$CODEPIPELINE_JOB_JSON" | jq -r '.data.artifactCredentials.secretAccessKey')
+export AWS_SESSION_TOKEN=$(echo "$CODEPIPELINE_JOB_JSON" | jq -r '.data.artifactCredentials.sessionToken')
+
+echo "Downloading $artifact_name"
+
+aws s3 cp --sse "s3://$artifact_s3_bucket_name/$artifact_s3_object_key" artifact.zip
+
+echo "~~~ Unzipping S3 artifact"
+
+unzip artifact.zip
+
+echo "~~~ Uploading as build artifact"
+
+buildkite-agent artifact upload artifact.zip
+
+# Clear the AWS environment variables, we don't want to mess with artifact uploads
+unset AWS_ACCESS_KEY_ID
+unset AWS_SECRET_ACCESS_KEY
+unset AWS_SESSION_TOKEN
