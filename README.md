@@ -7,6 +7,8 @@
 
 <img src="http://i.imgur.com/sgel4lR.png" width="242">
 
+<img src="http://i.imgur.com/U05UNLq.png" width="448">
+
 ## Requirements
 
 * [aws cli tool](https://aws.amazon.com/cli/)<br>You can test if the cli is configured by running `aws codepipeline list-pipelines`
