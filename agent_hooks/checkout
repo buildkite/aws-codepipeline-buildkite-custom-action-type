@@ -16,7 +16,7 @@ rm -rf "$checkout_dir"
 mkdir "$checkout_dir"
 cd "$checkout_dir"
 
-echo "~~~ Downloading S3 artifact"
+echo "~~~ :package: Downloading CodePipeline S3 artifact"
 
 if [[ -z "${CODEPIPELINE_JOB_JSON:-}" ]]; then
   echo "^^^ +++"
@@ -40,17 +40,21 @@ export AWS_ACCESS_KEY_ID=$(echo "$CODEPIPELINE_JOB_JSON" | jq -r '.data.artifact
 export AWS_SECRET_ACCESS_KEY=$(echo "$CODEPIPELINE_JOB_JSON" | jq -r '.data.artifactCredentials.secretAccessKey')
 export AWS_SESSION_TOKEN=$(echo "$CODEPIPELINE_JOB_JSON" | jq -r '.data.artifactCredentials.sessionToken')
 
-echo "Downloading $artifact_name"
+echo "Downloading $artifact_name..."
 
 aws s3 cp --sse "s3://$artifact_s3_bucket_name/$artifact_s3_object_key" artifact.zip
 
-echo "~~~ Unzipping S3 artifact"
+echo "Unzipping..."
 
 unzip artifact.zip
 
-echo "~~~ Uploading as build artifact"
+echo "Uploading as build artifact..."
 
 buildkite-agent artifact upload artifact.zip
+
+echo "Removing..."
+
+rm artifact.zip
 
 # Clear the AWS environment variables, we don't want to mess with artifact uploads
 unset AWS_ACCESS_KEY_ID
