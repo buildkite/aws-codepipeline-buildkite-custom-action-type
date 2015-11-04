@@ -2,11 +2,11 @@
 
 An example custom action type for triggering Buildkite builds from within AWS CodePipeline.
 
-## Getting Started
+Requirements:
 
-To add a custom type to CodePipeline you need to use the [aws cli tool](https://aws.amazon.com/cli/), so make sure you have this installed and authorized to modify CodePipeline service. You can test if the cli is configured by running `aws codepipeline list-pipelines`.
-
-You'll also need [jq](https://stedolan.github.io/jq/) installed.
+* [aws cli tool](https://aws.amazon.com/cli/) (you can test if the cli is configured by running `aws codepipeline list-pipelines`)
+* [jq](https://stedolan.github.io/jq/)
+* A Buildkite API access token with the `read_builds` and `write_builds` scope
 
 ### Add a new custom type to CodePipeline
 
@@ -27,15 +27,15 @@ aws codepipeline create-custom-action-type --cli-input-json file://custom-action
 
 Add a new pipeline action:
 
-![](http://i.imgur.com/2ItTqhq.png)
+<img src="http://i.imgur.com/2ItTqhq.png" width="197">
 
 Choose the type you created earlier:
 
-![](http://i.imgur.com/EJoLV8R.png)
+<img src="http://i.imgur.com/EJoLV8R.png" width="548">
 
-Configure it with a personal access token that has `read_builds` and `write_builds`, as well as the org slug, project slug and branch name:
+Configure it with your Buildkite details:
 
-![](http://i.imgur.com/EJoLV8R.png)
+<img src="http://i.imgur.com/hfiyBEa.png" width="542">
 
 ### Create a release
 
@@ -47,4 +47,14 @@ Polling for CodePipeline job for action-type-id 'category=Test,owner=Custom,vers
 Found job. Creating build at https://api.buildkite.com/v1/organizations/myorg/projects/myproj/builds
 Build #398 created - https://buildkite.com/myorg/myproj/builds/398
 Acknowleding CodePipeline job (id: e3d5097b-5933-438d-af73-56d9eb0d5a41 nonce: 3)
+Build is running
+Build is running
+Build finished
+Updating CodePipeline job with 'failed' result
 ```
+
+<img src="http://i.imgur.com/sFcKQys.png" width="236">
+
+## TODO
+
+* Revision/commit isn't passed correctly through to Buildkite
