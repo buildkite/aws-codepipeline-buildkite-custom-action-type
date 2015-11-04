@@ -8,7 +8,9 @@ Requirements:
 * [jq](https://stedolan.github.io/jq/)
 * A Buildkite API access token with the `read_builds` and `write_builds` scope
 
-### Add a new custom type to CodePipeline
+## Setup
+
+### 1. Add a new custom type to CodePipeline
 
 Create a Buildkite custom action type using one of the example JSON definitions. There are separate JSON files for each of the types:
 
@@ -23,7 +25,7 @@ For example, use the following command command to create a Buildkite `Test` acti
 aws codepipeline create-custom-action-type --cli-input-json file://custom-action-types/test.json
 ```
 
-### Edit your pipeline
+### 2. Edit your pipeline
 
 Add a new pipeline action:
 
@@ -37,7 +39,7 @@ Configure it with your Buildkite details:
 
 <img src="http://i.imgur.com/hfiyBEa.png" width="542">
 
-### Create a release
+### 3. Create a release
 
 Create a new release, and then run the job poller:
 
