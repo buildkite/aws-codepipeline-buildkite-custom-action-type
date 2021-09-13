@@ -1,3 +1,7 @@
+# Deprecated
+
+ > Buildkite no longer uses AWS CodePipeline. This repository has been deprecated and is no longer maintained.
+
 # Using AWS CodePipeline with Buildkite
 
 [AWS CodePipeline](https://aws.amazon.com/codepipeline/) integration for Buildkite that allows you to trigger Buildkite builds from within your CodePipeline pipelines. It consists of:
